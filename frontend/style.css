@@ -1,0 +1,48 @@
+body {
+  padding: 20px;
+  background: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.table td,
+.table th {
+  vertical-align: middle;
+}
+.modal-lg {
+  max-width: 900px;
+}
+.pointer {
+  cursor: pointer;
+}
+.container-main {
+  flex: 1 0 auto;
+}
+.pagination-container {
+  margin-top: auto;
+  padding-top: 20px;
+  position: sticky;
+  bottom: 0;
+  background: #f8f9fa;
+  padding-bottom: 10px;
+  border-top: 1px solid #dee2e6;
+}
+.sort-icon {
+  margin-left: 5px;
+  opacity: 0.5;
+}
+.sort-icon.active {
+  opacity: 1;
+  color: #0d6efd;
+}
+.table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+.btn-group-text .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+.actions-column {
+  min-width: 220px;
+}

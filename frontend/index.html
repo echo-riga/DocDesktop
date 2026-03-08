@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doctor Dashboard</title>
+    <link
+      href="../node_modules/bootstrap/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="../node_modules/bootstrap-icons/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container container-main">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-people me-2"></i>Patients</h2>
+        <button
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#createModal"
+        >
+          <i class="bi bi-plus-circle me-1"></i>Add Patient
+        </button>
+      </div>
+
+      <!-- Filters -->
+      <div class="card mb-4">
+        <div class="card-header bg-light">
+          <h6 class="mb-0"><i class="bi bi-funnel me-1"></i>Filters</h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Search by Name</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-search"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="searchName"
+                  placeholder="Enter patient name..."
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Created Date Range</label>
+              <div class="input-group">
+                <span class="input-group-text">From</span>
+                <input type="date" class="form-control" id="filterCreated" />
+                <span class="input-group-text">To</span>
+                <input type="date" class="form-control" id="filterCreatedEnd" />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Follow-up Date Range</label>
+              <div class="input-group">
+                <span class="input-group-text">From</span>
+                <input type="date" class="form-control" id="filterFollowUp" />
+                <span class="input-group-text">To</span>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="filterFollowUpEnd"
+                />
+              </div>
+            </div>
+            <div class="col-12">
+              <button
+                class="btn btn-outline-secondary btn-sm"
+                id="clearFilters"
+              >
+                <i class="bi bi-x-circle me-1"></i>Clear All Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover bg-white">
+          <thead class="table-light">
+            <tr>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>Phone</th>
+              <th class="sortable" onclick="toggleSort('created')">
+                Created
+                <i class="bi bi-arrow-down sort-icon" id="sortCreatedIcon"></i>
+              </th>
+              <th class="sortable" onclick="toggleSort('followUp')">
+                Follow-up
+                <i class="bi bi-arrow-down sort-icon" id="sortFollowUpIcon"></i>
+              </th>
+              <th class="actions-column">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="patientTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="pagination-container">
+        <nav>
+          <ul
+            class="pagination justify-content-center mb-0"
+            id="pagination"
+          ></ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Create Patient Modal -->
+    <div class="modal fade" id="createModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add Patient</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <h6>Basic Info</h6>
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="newName"
+                    placeholder="John Doe"
+                  />
+                  <label for="newName">Name</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="newPhone"
+                    placeholder="09123456789"
+                  />
+                  <label for="newPhone">Phone</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-floating mb-3">
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="newEmail"
+                    placeholder="john@example.com"
+                  />
+                  <label for="newEmail">Email</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-floating mb-3">
+                  <input type="date" class="form-control" id="newBirthdate" />
+                  <label for="newBirthdate">Birthdate</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <select class="form-select" id="newGender">
+                    <option value="">Select Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                  </select>
+                  <label for="newGender">Gender</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <select class="form-select" id="newBlood">
+                    <option value="">Blood Type</option>
+                    <option>A+</option>
+                    <option>A-</option>
+                    <option>B+</option>
+                    <option>B-</option>
+                    <option>AB+</option>
+                    <option>AB-</option>
+                    <option>O+</option>
+                    <option>O-</option>
+                  </select>
+                  <label for="newBlood">Blood Type</label>
+                </div>
+              </div>
+            </div>
+
+            <h6>Medical History</h6>
+            <div class="mb-3">
+              <div class="form-floating mb-3">
+                <textarea
+                  class="form-control"
+                  id="newAllergies"
+                  placeholder="None"
+                  style="height: 80px"
+                ></textarea>
+                <label for="newAllergies">Allergies</label>
+              </div>
+              <div class="form-floating mb-3">
+                <textarea
+                  class="form-control"
+                  id="newIllnesses"
+                  placeholder="Asthma"
+                  style="height: 80px"
+                ></textarea>
+                <label for="newIllnesses">Past Illnesses</label>
+              </div>
+              <div class="form-floating mb-3">
+                <textarea
+                  class="form-control"
+                  id="newSurgery"
+                  placeholder="Appendectomy"
+                  style="height: 80px"
+                ></textarea>
+                <label for="newSurgery">Surgery History</label>
+              </div>
+            </div>
+
+            <h6>Vitals</h6>
+            <div class="row mb-3">
+              <div class="col-md-3">
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="newBP"
+                    placeholder="120/80"
+                  />
+                  <label for="newBP">Blood Pressure</label>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-floating mb-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="newHR"
+                    placeholder="72"
+                  />
+                  <label for="newHR">Heart Rate</label>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-floating mb-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="newRR"
+                    placeholder="16"
+                  />
+                  <label for="newRR">Respiratory Rate</label>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-floating mb-3">
+                  <input
+                    type="number"
+                    step="0.1"
+                    class="form-control"
+                    id="newTemp"
+                    placeholder="36.5"
+                  />
+                  <label for="newTemp">Temperature °C</label>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-floating mb-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="newHeight"
+                    placeholder="170"
+                  />
+                  <label for="newHeight">Height (cm)</label>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-floating mb-3">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="newWeight"
+                    placeholder="70"
+                  />
+                  <label for="newWeight">Weight (kg)</label>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="newBMI"
+                    readonly
+                    placeholder="Auto-calculated"
+                  />
+                  <label for="newBMI">BMI</label>
+                </div>
+              </div>
+            </div>
+
+            <h6>Physical Examination</h6>
+            <div class="form-floating mb-3">
+              <textarea
+                class="form-control"
+                id="newExam"
+                placeholder="Normal examination findings"
+                style="height: 100px"
+              ></textarea>
+              <label for="newExam">Examination Notes</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-primary" id="addPatientBtn">
+              Add Patient
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View/Edit Patient Modal -->
+    <div class="modal fade" id="viewModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Patient Details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body" id="viewBody">
+            <div id="viewForm"></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+            <button class="btn btn-success" id="savePatientBtn">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Laboratory Modal -->
+    <div class="modal fade" id="labModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Laboratory Records</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle me-2"></i>
+              Laboratory records placeholder - Add functionality as needed.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Certificate Modal -->
+    <div class="modal fade" id="certModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-file-earmark-medical me-2"></i>Medical
+              Certificates
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="mb-0">Certificate History</h6>
+              <button class="btn btn-sm btn-primary" id="createNewCertBtn">
+                <i class="bi bi-plus-circle me-1"></i>New Certificate
+              </button>
+            </div>
+            <div id="certListContainer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prescription Modal -->
+    <div class="modal fade" id="presModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-prescription2 me-2"></i>Prescriptions
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="mb-0">Prescription History</h6>
+              <button class="btn btn-sm btn-primary" id="createNewPresBtn">
+                <i class="bi bi-plus-circle me-1"></i>New Prescription
+              </button>
+            </div>
+            <div id="presListContainer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

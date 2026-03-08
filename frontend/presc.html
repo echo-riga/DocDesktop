@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medical Prescription - A5</title>
+    <style>
+      /* Center the A5 container on the page */
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background: #f0f0f0;
+
+        box-sizing: border-box;
+      }
+
+      .a5-page {
+        width: 148mm;
+        height: 210mm;
+        background: white;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .header {
+        flex: 0 0 15%;
+        display: grid;
+        grid-template-columns: 2fr 10fr;
+        gap: 10px;
+        padding: 10px;
+        overflow: hidden;
+        box-sizing: border-box;
+        border-bottom: 2px solid #000000;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+        align-items: stretch;
+      }
+
+      .header-logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+      }
+
+      .header-logo img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+      }
+
+      .header-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.5;
+        height: 100%;
+        text-align: center;
+      }
+
+      .header-doctor-name {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #131212;
+      }
+
+      .header-credentials {
+        font-size: 13px;
+        margin-bottom: 3px;
+        color: #333;
+      }
+
+      .header-schedule {
+        font-size: 13px;
+        margin-top: 6px;
+        color: #333;
+        font-weight: 600;
+      }
+
+      .content {
+        flex: 1;
+        padding: 10px 15px;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      /* Patient Information Section - Fixed height */
+      .patient-info-section {
+        flex: 0 0 auto;
+        min-height: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+
+      .patient-info {
+        display: grid;
+        grid-template-columns: 3fr 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 5px;
+      }
+
+      .info-row-2 {
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        gap: 8px;
+      }
+
+      .info-field {
+        display: flex;
+        align-items: center;
+      }
+
+      .field-label {
+        font-weight: bold;
+        margin-right: 5px;
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
+      .underline {
+        display: inline-block;
+        border: none;
+        border-bottom: 1px solid #000;
+        flex: 1;
+        background: transparent;
+        outline: none;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        padding: 0 2px;
+        min-height: 16px;
+      }
+
+      /* Prescription Section - Fixed height calculation */
+      .prescription-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .prescription-title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 6px;
+        letter-spacing: 1px;
+        flex: 0 0 auto;
+      }
+
+      .prescription-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 10px;
+        table-layout: fixed;
+      }
+
+      .prescription-table thead {
+        height: 40px;
+      }
+
+      .prescription-table tbody tr {
+        height: 28px !important;
+        max-height: 28px !important;
+      }
+
+      .prescription-table tbody tr.notes-row {
+        height: 22px !important;
+        max-height: 22px !important;
+      }
+
+      .prescription-table th,
+      .prescription-table td {
+        border: 1px solid #000;
+        text-align: center;
+        vertical-align: middle;
+        padding: 2px;
+        overflow: hidden;
+        height: inherit;
+      }
+
+      .prescription-table th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        height: 40px;
+      }
+
+      .prescription-table tbody td {
+        height: 28px;
+        max-height: 28px;
+        line-height: 1.2;
+      }
+
+      .prescription-table tbody tr.notes-row td {
+        height: 32px;
+        max-height: 22px;
+        line-height: 1.1;
+        vertical-align: top;
+      }
+
+      .row-number {
+        width: 3%;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .medicine-column {
+        width: 50%;
+        text-align: left;
+      }
+
+      .qty-column {
+        width: 5%;
+      }
+
+      .time-column {
+        width: 17.75%;
+      }
+
+      .time-header {
+        font-size: 9px;
+        line-height: 1.2;
+      }
+      .time-header.bed {
+        font-size: 7px;
+        padding: 0px;
+        line-height: 1.2;
+      }
+
+      .time-subheader {
+        font-size: 7px;
+        font-weight: normal;
+        display: block;
+      }
+
+      .medicine-header {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        background-color: white;
+        height: 35px;
+      }
+
+      .medicine-header img {
+        max-height: 28px;
+        max-width: 100%;
+        object-fit: contain;
+      }
+
+      .medicine-input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10px;
+        padding: 1px 2px;
+        height: 24px;
+        line-height: 1.2;
+      }
+
+      .qty-input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        text-align: center;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10px;
+        padding: 1px 2px;
+        height: 24px;
+        line-height: 1.2;
+      }
+
+      .checkbox-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+
+      .checkbox-container input[type="checkbox"] {
+        width: 12px;
+        height: 12px;
+        margin: 0;
+      }
+
+      /* Notes rows */
+      .notes-row td {
+        padding: 1px 2px !important;
+        font-size: 8px;
+        text-align: left;
+      }
+
+      .notes-input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 8px;
+        padding: 1px 2px;
+        resize: none;
+        height: 18px;
+        line-height: 1.1;
+        overflow: hidden;
+      }
+
+      .medicine-notes {
+        text-align: left;
+      }
+
+      .time-notes {
+        text-align: center;
+        font-size: 7px;
+      }
+
+      /* Footer Section - Fixed height */
+      .footer-section {
+        flex: 0 0 auto;
+        min-height: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        margin-top: auto;
+        padding-top: 10px;
+      }
+
+      .follow-up-section {
+        margin-bottom: 8px;
+        padding-top: 5px;
+      }
+
+      .follow-up-label {
+        font-weight: bold;
+        margin-right: 8px;
+        font-size: 11px;
+      }
+
+      .follow-up-input {
+        border: none;
+        border-bottom: 1px solid #000;
+        min-width: 100px;
+        background: transparent;
+        outline: none;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        padding: 0 2px;
+      }
+
+      .signature-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+
+      .left-sig {
+        text-align: center;
+        font-size: 10px;
+        padding: 10px;
+      }
+
+      .right-sig {
+        text-align: center;
+        font-size: 10px;
+        line-height: 1.7;
+        padding: 10px;
+      }
+
+      .doctor-name {
+        font-weight: bold;
+        margin-bottom: 0;
+        margin-top: 5px;
+      }
+
+      .license-no {
+        font-size: 9px;
+      }
+
+      .footer {
+        flex: 0 0 7%;
+        padding: 5px;
+        text-align: center;
+        overflow: hidden;
+        background-color: #c9b06c;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+      }
+
+      .footer p {
+        font-size: 12px;
+        margin: 2px;
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      /* Action buttons style (screen only) */
+      .action-buttons {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s;
+      }
+
+      #printButton {
+        background-color: #4caf50;
+      }
+
+      #printButton:hover {
+        background-color: #45a049;
+      }
+
+      #addRowButton {
+        background-color: #ff9800;
+      }
+
+      #addRowButton:hover {
+        background-color: #e68900;
+      }
+
+      #saveCloseButton {
+        background-color: #2196f3;
+      }
+
+      #saveCloseButton:hover {
+        background-color: #0b7dda;
+      }
+
+      @media print {
+        body {
+          background: white;
+          margin: 0;
+          padding: 0;
+          display: block;
+        }
+
+        .action-buttons,
+        #addRowButton {
+          display: none !important;
+        }
+
+        .a5-page {
+          width: 148mm;
+          height: 210mm;
+          box-shadow: none;
+          border: none;
+          margin: 0;
+          page-break-after: always;
+          page-break-inside: avoid;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+
+        .a5-page:last-child {
+          page-break-after: auto;
+        }
+
+        @page {
+          size: A5 portrait;
+          margin: 0;
+        }
+
+        .header {
+          border-bottom: 2px solid #000000 !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+          color-adjust: exact !important;
+        }
+
+        .footer {
+          background-color: #c9b06c !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+          color-adjust: exact !important;
+        }
+
+        .prescription-table th {
+          background-color: #f5f5f5 !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        /* Only add borders to patient info inputs */
+        .underline,
+        .follow-up-input {
+          border-bottom: 1px solid #000 !important;
+          background: transparent !important;
+        }
+
+        /* Remove any borders from table inputs */
+        .medicine-input,
+        .qty-input,
+        .notes-input {
+          border: none !important;
+          background: transparent !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Action buttons -->
+    <div class="action-buttons">
+      <button id="addRowButton" class="btn">➕ Add Row</button>
+      <button id="printButton" class="btn" onclick="window.print()">
+        🖨️ Print
+      </button>
+      <button id="saveCloseButton" class="btn">💾 Save and Close</button>
+    </div>
+
+    <div id="pages-container"></div>
+
+    <script>
+      // Store all rows data
+      let allRows = [];
+      const maxRowsPerPage = 5;
+
+      // Initial rows (5 empty rows)
+      for (let i = 0; i < 5; i++) {
+        allRows.push({
+          id: i + 1,
+          rowNumber: i + 1,
+          medicine: "",
+          qty: "",
+          breakfastBefore: false,
+          breakfastAfter: false,
+          lunchBefore: false,
+          lunchAfter: false,
+          dinnerBefore: false,
+          dinnerAfter: false,
+          bedtime: false,
+          medicineNotes: "",
+          timeNotes: "",
+        });
+      }
+
+      // Function to create a page
+      function createPage(pageNumber) {
+        return `
+          <div class="a5-page" id="page-${pageNumber}">
+            <div class="header">
+              <div class="header-logo">
+                <img src="image.png" alt="Logo" />
+              </div>
+              <div class="header-info">
+                <div class="header-doctor-name">
+                  Irish Jasmine P. Dizon, MD, FPSO - HNS
+                </div>
+                <div class="header-credentials">
+                  Fellow, Philippine Society of Otolaryngology, Head and Neck Surgery
+                </div>
+                <div class="header-credentials">
+                  Fellow, Philippine Federation of Cosmetic Surgeons Inc.
+                </div>
+                <div class="header-schedule">
+                  Monday to Friday 5PM-8PM | Saturday 9AM-2PM | Sunday 9AM-12NN
+                </div>
+              </div>
+            </div>
+
+            <div class="content">
+              <div class="patient-info-section">
+                <div class="patient-info">
+                  <div class="info-field">
+                    <span class="field-label">Name:</span>
+                    <input type="text" class="underline" />
+                  </div>
+                  <div class="info-field">
+                    <span class="field-label">Age:</span>
+                    <input type="text" class="underline" />
+                  </div>
+                  <div class="info-field">
+                    <span class="field-label">Sex:</span>
+                    <input type="text" class="underline" />
+                  </div>
+                </div>
+                <div class="info-row-2">
+                  <div class="info-field">
+                    <span class="field-label">Address:</span>
+                    <input type="text" class="underline" />
+                  </div>
+                  <div class="info-field">
+                    <span class="field-label">Date:</span>
+                    <input type="text" class="underline" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="prescription-section">
+                <div class="prescription-title">PRESCRIPTION</div>
+                
+                <table class="prescription-table">
+                  <thead>
+                    <tr>
+                      <th class="row-number">#</th>
+                      <th class="medicine-column">
+                        <div class="medicine-header">
+                          <img src="1.png" alt="Logo" />
+                        </div>
+                      </th>
+                      <th class="qty-column">Qty</th>
+                      <th colspan="2" class="time-header">Breakfast<span class="time-subheader">Before/After</span></th>
+                      <th colspan="2" class="time-header">Lunch<span class="time-subheader">Before/After</span></th>
+                      <th colspan="2" class="time-header">Dinner<span class="time-subheader">Before/After</span></th>
+                      <th class="time-header bed">Bedtime <span class="time-subheader">Before</span></th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody id="table-body-${pageNumber}">
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="footer-section">
+                <div class="signature-section">
+                  <div class="left-sig">
+                    <span class="follow-up-label">Follow-up Date:</span>
+                    <input type="text" class="follow-up-input" />
+                  </div>
+                  <div class="right-sig">
+                    <div class="doctor-name">Dr. Irish Dizon M.D</div>
+                    License No: MED-000123
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="footer">
+              <p>
+                Unit K. No. 8 A. Mabini St. Brgy. Kapasigan, Pasig City | 0927 411
+                6708 |
+              </p>
+              <p>preclarodizonclinic@gmail.com</p>
+            </div>
+          </div>
+        `;
+      }
+
+      // Function to create row HTML
+      function createRowHtml(row) {
+        return `
+          <tr>
+            <td class="row-number">${row.rowNumber}</td>
+            <td class="medicine-column">
+              <input type="text" class="medicine-input" value="${row.medicine}" 
+                     onchange="updateRowData(${row.id}, 'medicine', this.value)" />
+            </td>
+            <td class="qty-column">
+              <input type="text" class="qty-input" value="${row.qty}" 
+                     onchange="updateRowData(${row.id}, 'qty', this.value)" />
+            </td>
+            <td class="time-column">
+              <div class="checkbox-container">
+                <input type="checkbox" ${row.breakfastBefore ? "checked" : ""} 
+                       onchange="updateRowData(${row.id}, 'breakfastBefore', this.checked)" />
+              </div>
+            </td>
+            <td class="time-column">
+              <div class="checkbox-container">
+                <input type="checkbox" ${row.breakfastAfter ? "checked" : ""} 
+                       onchange="updateRowData(${row.id}, 'breakfastAfter', this.checked)" />
+              </div>
+            </td>
+            <td class="time-column">
+              <div class="checkbox-container">
+                <input type="checkbox" ${row.lunchBefore ? "checked" : ""} 
+                       onchange="updateRowData(${row.id}, 'lunchBefore', this.checked)" />
+              </div>
+            </td>
+            <td class="time-column">
+              <div class="checkbox-container">
+                <input type="checkbox" ${row.lunchAfter ? "checked" : ""} 
+                       onchange="updateRowData(${row.id}, 'lunchAfter', this.checked)" />
+              </div>
+            </td>
+            <td class="time-column">
+              <div class="checkbox-container">
+                <input type="checkbox" ${row.dinnerBefore ? "checked" : ""} 
+                       onchange="updateRowData(${row.id}, 'dinnerBefore', this.checked)" />
+              </div>
+            </td>
+            <td class="time-column">
+              <div class="checkbox-container">
+                <input type="checkbox" ${row.dinnerAfter ? "checked" : ""} 
+                       onchange="updateRowData(${row.id}, 'dinnerAfter', this.checked)" />
+              </div>
+            </td>
+            <td class="time-column">
+              <div class="checkbox-container">
+                <input type="checkbox" ${row.bedtime ? "checked" : ""} 
+                       onchange="updateRowData(${row.id}, 'bedtime', this.checked)" />
+              </div>
+            </td>
+          </tr>
+          <tr class="notes-row">
+            <td></td>
+            <td colspan="2" class="medicine-notes">
+              <textarea class="notes-input" rows="1" placeholder="Medicine notes..."
+                        onchange="updateRowData(${row.id}, 'medicineNotes', this.value)">${row.medicineNotes}</textarea>
+            </td>
+            <td colspan="7" class="time-notes">
+              <textarea class="notes-input" rows="1" placeholder="Dosage timing notes..."
+                        onchange="updateRowData(${row.id}, 'timeNotes', this.value)">${row.timeNotes}</textarea>
+            </td>
+          </tr>
+        `;
+      }
+
+      // Function to update row data
+      function updateRowData(rowId, field, value) {
+        const row = allRows.find((r) => r.id === rowId);
+        if (row) {
+          row[field] = value;
+        }
+      }
+
+      // Function to render all pages
+      function renderPages() {
+        const container = document.getElementById("pages-container");
+        container.innerHTML = "";
+
+        const totalPages = Math.ceil(allRows.length / maxRowsPerPage);
+
+        for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+          const startIndex = (pageNum - 1) * maxRowsPerPage;
+          const endIndex = startIndex + maxRowsPerPage;
+          const pageRows = allRows.slice(startIndex, endIndex);
+
+          // Update row numbers
+          pageRows.forEach((row, index) => {
+            row.rowNumber = startIndex + index + 1;
+          });
+
+          // Create page
+          container.insertAdjacentHTML("beforeend", createPage(pageNum));
+
+          // Add rows to table
+          const tableBody = document.getElementById(`table-body-${pageNum}`);
+          pageRows.forEach((row) => {
+            tableBody.insertAdjacentHTML("beforeend", createRowHtml(row));
+          });
+        }
+      }
+
+      // Function to add new row
+      function addNewRow() {
+        const newRowId =
+          allRows.length > 0 ? Math.max(...allRows.map((r) => r.id)) + 1 : 1;
+        allRows.push({
+          id: newRowId,
+          rowNumber: allRows.length + 1,
+          medicine: "",
+          qty: "",
+          breakfastBefore: false,
+          breakfastAfter: false,
+          lunchBefore: false,
+          lunchAfter: false,
+          dinnerBefore: false,
+          dinnerAfter: false,
+          bedtime: false,
+          medicineNotes: "",
+          timeNotes: "",
+        });
+
+        renderPages();
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        renderPages();
+
+        document
+          .getElementById("addRowButton")
+          .addEventListener("click", addNewRow);
+
+        document
+          .getElementById("saveCloseButton")
+          .addEventListener("click", function () {
+            console.log("Data to save:", allRows);
+            alert("Data saved! (Check console for data)");
+          });
+      });
+    </script>
+  </body>
+</html>
