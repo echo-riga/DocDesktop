@@ -1,0 +1,426 @@
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Medical Certificate - A5</title>
+      <style>
+        /* Center the A5 container on the page */
+        body {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          margin: 0;
+          background: #f0f0f0;
+        }
+
+        .a5-page {
+          width: 148mm; /* A5 width */
+          height: 210mm; /* A5 height */
+          background: white;
+          border: 1px solid #ccc;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+
+        .header {
+          flex: 0 0 15%;
+          display: grid;
+          grid-template-columns: 2fr 10fr;
+          gap: 10px;
+          padding: 10px;
+          overflow: hidden;
+          box-sizing: border-box;
+          border-bottom: 2px solid #000000;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+          align-items: stretch;
+        }
+
+        .header-logo {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          width: 100%;
+        }
+
+        .header-logo img {
+          max-height: 100%;
+          max-width: 100%;
+          object-fit: contain;
+        }
+
+        .header-info {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          font-family: Arial, Helvetica, sans-serif;
+          line-height: 1.5;
+          height: 100%;
+          text-align: center;
+        }
+
+        .header-doctor-name {
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 5px;
+          color: #131212;
+        }
+
+        .header-credentials {
+          font-size: 13px;
+          margin-bottom: 3px;
+          color: #333;
+        }
+
+        .header-schedule {
+          font-size: 13px;
+          margin-top: 6px;
+          color: #333;
+          font-weight: 600;
+        }
+
+        .content {
+          flex: 1;
+          padding: 20px 25px;
+          box-sizing: border-box;
+          overflow: hidden;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 11px;
+          line-height: 1.8;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .date-line {
+          text-align: right;
+          margin-bottom: 20px;
+          font-size: 11px;
+        }
+
+        .cert-title {
+          text-align: center;
+          font-weight: bold;
+          font-size: 14px;
+          margin-bottom: 20px;
+          letter-spacing: 1px;
+        }
+
+        .cert-body {
+          margin-bottom: 12px;
+          line-height: 1.8;
+        }
+
+        .underline {
+          display: inline-block;
+          border: none;
+          border-bottom: 1px solid #000;
+          min-width: 120px;
+          width: 120px;
+          background: transparent;
+          outline: none;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 11px;
+          padding: 0 2px;
+          vertical-align: baseline;
+          text-align: center;
+        }
+
+        .underline-long {
+          display: inline-block;
+          border: none;
+          border-bottom: 1px solid #000;
+          min-width: 180px;
+          width: 180px;
+          background: transparent;
+          outline: none;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 11px;
+          padding: 0 2px;
+          vertical-align: baseline;
+          text-align: center;
+        }
+        .underline-long.for {
+          width: 100% !important;
+          text-align: left;
+        }
+        .underline-long.address {
+          width: 100% !important;
+          text-align: left;
+        }
+        .underline-short {
+          display: inline-block;
+          border: none;
+          border-bottom: 1px solid #000;
+          min-width: 25px;
+          width: 25px;
+          background: transparent;
+          outline: none;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 11px;
+          padding: 0 2px;
+          vertical-align: baseline;
+          text-align: center;
+        }
+
+        .section-title {
+          font-weight: bold;
+          margin-top: 15px;
+          margin-bottom: 8px;
+        }
+
+        .field-line {
+          border: none;
+          border-bottom: 1px solid #000;
+          min-height: 18px;
+          margin-bottom: 5px;
+          width: 100%;
+          background: transparent;
+          outline: none;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 11px;
+          padding: 2px 0;
+          display: block;
+        }
+
+        .disclaimer {
+          text-align: center;
+          font-size: 9px;
+          margin-top: 15px;
+          font-style: italic;
+        }
+
+        .signature-section {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          margin-top: 20px;
+        }
+
+        .left-sig {
+          text-align: center;
+          font-size: 10px;
+        }
+
+        .right-sig {
+          text-align: center;
+          font-size: 10px;
+        }
+
+        .doctor-name {
+          font-weight: bold;
+          margin-top: 5px;
+        }
+
+        .footer {
+          flex: 0 0 7%;
+          padding: 5px;
+          text-align: center;
+          overflow: hidden;
+          background-color: #c9b06c;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+
+        .footer p {
+          font-size: 12px;
+          margin: 2px;
+          color: white;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Action buttons style (screen only) */
+        .action-buttons {
+          position: fixed;
+          top: 10px;
+          right: 10px;
+          z-index: 1000;
+          display: flex;
+          gap: 10px;
+        }
+
+        .btn {
+          padding: 10px 20px;
+          font-size: 14px;
+          cursor: pointer;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+          transition: background-color 0.3s;
+        }
+
+        #printButton {
+          background-color: #4caf50;
+        }
+
+        #printButton:hover {
+          background-color: #45a049;
+        }
+
+        #saveCloseButton {
+          background-color: #2196f3;
+        }
+
+        #saveCloseButton:hover {
+          background-color: #0b7dda;
+        }
+
+        /* ---------- PRINT STYLES ---------- */
+        @media print {
+          body {
+            background: white;
+            margin: 0;
+            padding: 0;
+          }
+
+          .action-buttons {
+            display: none !important;
+          }
+
+          .a5-page {
+            width: 148mm;
+            height: 210mm;
+            box-shadow: none;
+            border: none;
+            margin: 0;
+            page-break-after: avoid;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            color-adjust: exact;
+          }
+
+          @page {
+            size: A5 portrait;
+            margin: 0;
+          }
+
+          .header {
+            border-bottom: 2px solid #000000 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+          }
+
+          .footer {
+            background-color: #c9b06c !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+          }
+
+          /* Ensure input fields print correctly */
+          input,
+          input.field-line {
+            border-bottom: 1px solid #000 !important;
+            background: transparent !important;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <!-- Action buttons -->
+      <div class="action-buttons">
+        <button id="printButton" class="btn" onclick="window.print()">
+          🖨️ Print
+        </button>
+        <button id="saveCloseButton" class="btn">💾 Save and Close</button>
+      </div>
+
+      <div class="a5-page">
+        <div class="header">
+          <div class="header-logo">
+            <img src="image.png" alt="Logo" />
+          </div>
+          <div class="header-info">
+            <div class="header-doctor-name">
+              Irish Jasmine P. Dizon, MD, FPSO - HNS
+            </div>
+            <div class="header-credentials">
+              Fellow, Philippine Society of Otolaryngology, Head and Neck Surgery
+            </div>
+            <div class="header-credentials">
+              Fellow, Philippine Federation of Cosmetic Surgeons Inc.
+            </div>
+            <div class="header-schedule">
+              Monday to Friday 5PM-8PM | Saturday 9AM-2PM | Sunday 9AM-12NN
+            </div>
+          </div>
+        </div>
+
+        <div class="content">
+          <div>
+            <div class="date-line">
+              Date: <input type="text" class="underline" />
+            </div>
+
+            <div class="cert-title">MEDICAL CERTIFICATE</div>
+
+            <div class="cert-body">
+              <strong>To whom it may concern:</strong>
+            </div>
+
+            <div class="cert-body">
+              This is to certify that
+              <input type="text" class="underline-long" />,
+              <input type="text" class="underline-short" /> years old presently
+              residing at <input type="text" class="underline-long address" /> was
+              examined and treated at my clinic on
+              <input type="text" class="underline" /> for
+              <input type="text" class="underline-long for" />
+            </div>
+
+            <div class="section-title">Diagnosis:</div>
+            <input type="text" class="field-line" />
+            <input type="text" class="field-line" />
+            <input type="text" class="field-line" />
+
+            <div class="section-title">Recommendation/s:</div>
+            <input type="text" class="field-line" />
+            <input type="text" class="field-line" />
+            <input type="text" class="field-line" />
+          </div>
+
+          <div>
+            <div class="disclaimer">
+              This certification is issued upon the request of the patient for
+              whatever purpose<br />
+              it may serve except medicolegal purpose
+            </div>
+
+            <div class="signature-section">
+              <div class="left-sig">
+                Not valid without<br />
+                <strong>Dry seal</strong>
+              </div>
+              <div class="right-sig">
+                <div class="doctor-name">Dr. Irish Dizon M.D</div>
+                License No: MED-000123
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <p>
+            Unit K. No. 8 A. Mabini St. Brgy. Kapasigan, Pasig City | 0927 411
+            6708 |
+          </p>
+          <p>preclarodizonclinic@gmail.com</p>
+        </div>
+      </div>
+    </body>
+  </html>
